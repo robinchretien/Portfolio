@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sigmar&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Sigmar&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
   <div id="menuToggleButton">
@@ -343,10 +344,52 @@
       const menu = document.querySelector('.menu');
       const menuToggleButton = document.getElementById('menuToggleButton');
       const body = document.querySelector('body');
+      const menuLinks = document.querySelectorAll('.menuNavigation a');
 
+      // État initial - menu fermé sur mobile
+      if (window.innerWidth <= 768) {
+        menu.classList.add('collapsed');
+        body.classList.add('menu-collapsed');
+      }
+
+      // Toggle du menu
       menuToggleButton.addEventListener('click', function() {
         menu.classList.toggle('collapsed');
         body.classList.toggle('menu-collapsed');
+      });
+      
+      // Fermer le menu quand on clique sur un lien (uniquement sur mobile)
+      menuLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          if (window.innerWidth <= 768) {
+            menu.classList.add('collapsed');
+            body.classList.add('menu-collapsed');
+          }
+        });
+      });
+      
+      // Fermer le menu quand on clique en dehors (uniquement sur mobile)
+      document.addEventListener('click', function(event) {
+        const isClickInsideMenu = menu.contains(event.target);
+        const isClickOnButton = menuToggleButton.contains(event.target);
+        
+        if (!isClickInsideMenu && !isClickOnButton && !menu.classList.contains('collapsed') && window.innerWidth <= 768) {
+          menu.classList.add('collapsed');
+          body.classList.add('menu-collapsed');
+        }
+      });
+      
+      // Gestion de la taille de l'écran
+      window.addEventListener('resize', function() {
+        if (window.innerWidth <= 768) {
+          // Sur mobile, garder le menu fermé par défaut
+          menu.classList.add('collapsed');
+          body.classList.add('menu-collapsed');
+        } else {
+          // Sur desktop, ouvrir le menu par défaut
+          menu.classList.remove('collapsed');
+          body.classList.remove('menu-collapsed');
+        }
       });
       
       // Gestion des filtres de projets
